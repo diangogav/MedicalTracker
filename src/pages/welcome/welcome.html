@@ -1,0 +1,30 @@
+<!--
+  Generated template for the WelcomePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>welcome</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<form>
+      <ion-item>
+        <ion-label floating>Email</ion-label>
+        <ion-input
+          [(ngModel)]="user.username"
+          name="email"
+          type="text"
+          autocapitalize="off"
+          required
+        >
+        </ion-input>
+      </ion-item>
+  </form>
+</ion-content>

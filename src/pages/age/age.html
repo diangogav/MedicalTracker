@@ -1,0 +1,24 @@
+<!--
+  Generated template for the AgePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>age</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item>
+    <ion-label>Date</ion-label>
+    <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="myDate"></ion-datetime>
+  </ion-item>
+  <button ion-button (click)="saveAge()" type="submit"color="primary" block>
+    Finish
+</button>
+</ion-content>
