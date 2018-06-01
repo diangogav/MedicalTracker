@@ -33,6 +33,8 @@ personalData;
 
   saveUser(){
   	this.personalData = {
+
+  	  username: "Diango",
       gender: this.dataUser.getGender(),
       weight: this.dataUser.getWeight(),
       stature: this.dataUser.getStature(),
