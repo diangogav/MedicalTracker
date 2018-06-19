@@ -6,40 +6,45 @@
 
 <ion-content padding>
 
-  <ion-card [hidden] = "flag" (click) = "hidden()">
+    <ion-card [hidden] = "flag" (click) = "hidden()" class="card-chart" style="margin-top: 0">
+      <ion-card-header>
+        Oxygen (%)
+      </ion-card-header>
+      <ion-card-content>
+        <canvas #lineCanvas height="250px"></canvas>
+      </ion-card-content>
+    </ion-card>    
+
+
+  <ion-card [hidden] = "flag2" (click) = "hidden2()" class="card-number">
     <ion-card-header>
-      Line Chart
+      <h2 id="card-number-blue" class="card-number-header">Oxygen (%)</h2>
     </ion-card-header>
     <ion-card-content>
-      <canvas #lineCanvas></canvas>
+      <h3>{{actualValue}}</h3>
     </ion-card-content>
   </ion-card>
-
-  <ion-card [hidden] = "flag2" (click) = "hidden2()">
-    <ion-card-header>
-      {{actualValue}}
-    </ion-card-header>
-    <ion-card-content>
-
-    </ion-card-content>
-  </ion-card>
+    
 <!--================================================-->
-  <ion-card [hidden] = "flag3" (click) = "hidden()">
+  <ion-card [hidden] = "flag3" (click) = "hidden3()" class="card-chart">
     <ion-card-header>
-      Line Chart
+      <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-      <canvas #lineCanvas2></canvas>
+      <canvas #lineCanvas2 height="250px"></canvas>
+    </ion-card-content>
+  </ion-card>
+  
+
+
+  <ion-card [hidden] = "flag4" (click) = "hidden4()" class="card-number">
+    <ion-card-header>
+      <h2 id="card-number-red" class="card-number-header">Pulse (PPM)</h2>
+    </ion-card-header>
+    <ion-card-content>
+      <h3>{{actualValuePulse}}</h3>
     </ion-card-content>
   </ion-card>
 
-  <ion-card [hidden] = "flag4" (click) = "hidden2()">
-    <ion-card-header>
-      {{actualValue}}
-    </ion-card-header>
-    <ion-card-content>
-
-    </ion-card-content>
-  </ion-card>
-
+  
 </ion-content>
