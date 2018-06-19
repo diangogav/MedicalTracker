@@ -1,3 +1,36 @@
 page-home {
 
+
+
+	.card-number h3 {
+	    font-size: 7em;
+	    font-weight: 600;
+	    text-align: center;
+    	padding-top: 10%;
+    }
+
+	.card-number-header {
+
+	    color: #fff;
+	    font-family: impact;
+	    font-size: 2em;
+	}
+
+	#card-number-blue {
+	    letter-spacing: 0;
+	    text-shadow: -3px -3px 3px #0000DF, 3px -3px 3px #0000DF, -3px 3px 3px #0000DF, 3px 3px 3px #0000DF;
+	}
+
+	#card-number-red {
+	    letter-spacing: 0;
+	    text-shadow: -3px -3px 3px red, 3px -3px 3px red, -3px 3px 3px red, 3px 3px 3px red;
+	}
+
+	ion-card{
+		height: 50%;
+	}
+
+	canvas{
+		height: 100%;
+	}
 }
