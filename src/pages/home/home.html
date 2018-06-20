@@ -11,17 +11,18 @@
         Oxygen (%)
       </ion-card-header>
       <ion-card-content>
-        <canvas #lineCanvas height="250px"></canvas>
+        <canvas #lineCanvas></canvas>
       </ion-card-content>
     </ion-card>    
 
 
   <ion-card [hidden] = "flag2" (click) = "hidden2()" class="card-number">
     <ion-card-header>
-      <h2 id="card-number-blue" class="card-number-header">Oxygen (%)</h2>
+      <h2>Oxygen (%)</h2>
     </ion-card-header>
     <ion-card-content>
-      <h3>{{actualValue}}</h3>
+          <round-progress [current]="actualValue" [radius]="45" [color]="'#20BAFC'" [stroke]="10" [max]="100"></round-progress>
+          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-200%) translateX(39%); font-size: 20px;">  {{actualValue}}/{{maxOxygen}}</div>
     </ion-card-content>
   </ion-card>
     
@@ -31,7 +32,7 @@
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-      <canvas #lineCanvas2 height="250px"></canvas>
+      <canvas #lineCanvas2></canvas>
     </ion-card-content>
   </ion-card>
   
@@ -39,12 +40,12 @@
 
   <ion-card [hidden] = "flag4" (click) = "hidden4()" class="card-number">
     <ion-card-header>
-      <h2 id="card-number-red" class="card-number-header">Pulse (PPM)</h2>
+      <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-      <h3>{{actualValuePulse}}</h3>
+          <round-progress [current]="actualValuePulse" [radius]="45" [color]="'#D60A0A'" [stroke]="10" [max]="100"></round-progress>
+          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-200%) translateX(39%); font-size: 20px;">  {{actualValuePulse}}/{{maxPulse}}</div>
     </ion-card-content>
   </ion-card>
 
-  
 </ion-content>
