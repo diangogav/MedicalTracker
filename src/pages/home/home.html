@@ -6,12 +6,12 @@
 
 <ion-content padding>
 
-    <ion-card [hidden] = "flag" (click) = "hidden()" class="card-chart" style="margin-top: 0">
+    <ion-card [hidden] = "flag" (click) = "hidden()" class="card-chart" style="margin-top: 0; height: 50%">
       <ion-card-header>
         Oxygen (%)
       </ion-card-header>
       <ion-card-content>
-        <canvas #lineCanvas></canvas>
+        <canvas #lineCanvas height="200%"></canvas>
       </ion-card-content>
     </ion-card>    
 
@@ -21,18 +21,18 @@
       <h2>Oxygen (%)</h2>
     </ion-card-header>
     <ion-card-content>
-          <round-progress [current]="actualValue" [radius]="80" [color]="'#20BAFC'" [stroke]="15" [max]="100"></round-progress>
+          <round-progress [current]="actualValue" [radius]="80" [color]="'#20BAFC'" [stroke]="15" [max]="98"></round-progress>
           <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-240%) translateX(35%); font-size: 30px;">  {{actualValue}}/{{maxOxygen}}</div>
     </ion-card-content>
   </ion-card>
     
 <!--================================================-->
-  <ion-card [hidden] = "flag3" (click) = "hidden3()" class="card-chart">
+  <ion-card [hidden] = "flag3" (click) = "hidden3()" class="card-chart" style="height: 50%">
     <ion-card-header>
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-      <canvas #lineCanvas2></canvas>
+      <canvas #lineCanvas2 height="200%"></canvas>
     </ion-card-content>
   </ion-card>
   
@@ -43,7 +43,7 @@
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-          <round-progress [current]="actualValuePulse" [radius]="80" [color]="'#D60A0A'" [stroke]="15" [max]="100"></round-progress>
+          <round-progress [current]="actualValuePulse" [radius]="80" [color]="'#D60A0A'" [stroke]="15" [max]="98"></round-progress>
           <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-240%) translateX(35%); font-size: 30px;">  {{actualValuePulse}}/{{maxPulse}}</div>
     </ion-card-content>
   </ion-card>
