@@ -56,8 +56,8 @@ export class AboutPage {
 
 	getPulses(){
 
-		this.pulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+this.actualDate);
-
+		//this.pulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+this.actualDate);
+		this.pulse = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate+'/pulso');
 		    this.pulse.once('value',(dataSnapshot) => {
 		          
 
@@ -70,6 +70,7 @@ export class AboutPage {
 				this.pulseReadings = this.pulseArray.length;
 
 		       	this.pulseArray.forEach((pulseDat) => {
+
 		       		this.pulseMean = this.pulseMean + pulseDat;
 		       	});
 
@@ -84,8 +85,9 @@ export class AboutPage {
 
 	getOxygens(){
 
-			this.oxygen = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+this.actualDate);
-
+			//this.oxygen = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+this.actualDate);
+			this.oxygen = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate+'/oxigeno');
+		    
 		    this.oxygen.once('value',(dataSnapshot) => {
 	          
 
@@ -98,6 +100,7 @@ export class AboutPage {
 			this.oxygenReadings = this.oxygenArray.length;
 
 	       	this.oxygenArray.forEach((oxygenDat) => {
+
 	       		this.oxygenMean = this.oxygenMean + oxygenDat;
 	       	});
 

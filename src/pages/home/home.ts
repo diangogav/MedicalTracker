@@ -51,7 +51,8 @@ export class HomePage {
         var actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
         this.user = this.auth.getUser();
         console.log(this.user);
-        this.items = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+actualDate).limitToLast(10);
+        //this.items = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+actualDate).limitToLast(10);
+        this.items = firebase.database().ref('Users/'+this.user+'/chart/'+actualDate+'/oxigeno').limitToLast(10);
         this.items.on('value',(snapshot) => {
             this.xArray.splice(0,this.xArray.length);
             this.yArray.splice(0,this.yArray.length);
@@ -65,7 +66,8 @@ export class HomePage {
             this.chartData(this.yArray,this.xArray);
           });
 
-          this.itemsPulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+actualDate).limitToLast(10);
+          //this.itemsPulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+actualDate).limitToLast(10);
+          this.itemsPulse = firebase.database().ref('Users/'+this.user+'/chart/'+actualDate+'/pulso').limitToLast(10);
           this.itemsPulse.on('value',(snapshot) => {
               this.xArrayPulse.splice(0,this.xArrayPulse.length);
               this.yArrayPulse.splice(0,this.yArrayPulse.length);

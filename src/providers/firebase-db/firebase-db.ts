@@ -33,7 +33,8 @@ export class FirebaseDbProvider {
     var jsonVariable = {};
 
       jsonVariable[actualHour] = data;    
-     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/oxigeno').child(actualDate);
+     //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/oxigeno').child(actualDate);
+     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/'+actualDate).child('oxigeno');
      return chartRef.update(jsonVariable)
     //return this.afDB.database.ref.child('Users/'+this.auth.getUser()+'/chart/oxigeno')
  }
@@ -47,7 +48,8 @@ export class FirebaseDbProvider {
     var jsonVariable = {};
 
       jsonVariable[actualHour] = data;    
-     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/pulso').child(actualDate);
+     //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/pulso').child(actualDate);
+     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/'+actualDate).child('pulso');
      return chartRef.update(jsonVariable)
     //return this.afDB.database.ref.child('Users/'+this.auth.getUser()+'/chart/oxigeno')
  }

@@ -16,6 +16,7 @@ import { WeightPage } from '../pages/weight/weight';
 import { AgePage } from '../pages/age/age';
 import { FinishPage } from '../pages/finish/finish';
 import { ViewPage } from '../pages/view/view';
+import { RecordPage }from '../pages/record/record'
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -51,7 +52,8 @@ const firebaseConfig = {
     WeightPage,
     AgePage,
     FinishPage,
-    ViewPage
+    ViewPage,
+    RecordPage
   ],
   imports: [
     BrowserModule,
@@ -75,7 +77,8 @@ const firebaseConfig = {
     WeightPage,
     AgePage,
     FinishPage,
-    ViewPage
+    ViewPage,
+    RecordPage
   ],
   providers: [
     StatusBar,
