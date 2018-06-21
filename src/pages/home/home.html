@@ -11,18 +11,18 @@
         Oxygen (%)
       </ion-card-header>
       <ion-card-content>
-        <canvas #lineCanvas height="200%"></canvas>
+        <canvas #lineCanvas></canvas>
       </ion-card-content>
     </ion-card>    
 
 
-  <ion-card [hidden] = "flag2" (click) = "hidden2()" class="card-number">
+  <ion-card [hidden] = "flag2" (click) = "hidden2()" class="card-number" style="height: 50%">
     <ion-card-header>
       <h2>Oxygen (%)</h2>
     </ion-card-header>
     <ion-card-content>
-          <round-progress [current]="actualValue" [radius]="80" [color]="'#20BAFC'" [stroke]="15" [max]="98"></round-progress>
-          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-240%) translateX(35%); font-size: 30px;">  {{actualValue}}/{{maxOxygen}}</div>
+          <round-progress [current]="actualValue" [radius]="70" [color]="'#20BAFC'" [stroke]="15" [max]="98"></round-progress>
+          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-210%) translateX(33%); font-size: 30px;">  {{actualValue}}/{{maxOxygen}}</div>
     </ion-card-content>
   </ion-card>
     
@@ -32,19 +32,19 @@
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-      <canvas #lineCanvas2 height="200%"></canvas>
+      <canvas #lineCanvas2></canvas>
     </ion-card-content>
   </ion-card>
   
 
 
-  <ion-card [hidden] = "flag4" (click) = "hidden4()" class="card-number">
+  <ion-card [hidden] = "flag4" (click) = "hidden4()" class="card-number" style="height: 50%">
     <ion-card-header>
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
     <ion-card-content>
-          <round-progress [current]="actualValuePulse" [radius]="80" [color]="'#D60A0A'" [stroke]="15" [max]="98"></round-progress>
-          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-240%) translateX(35%); font-size: 30px;">  {{actualValuePulse}}/{{maxPulse}}</div>
+          <round-progress [current]="actualValuePulse" [radius]="70" [color]="'#D60A0A'" [stroke]="15" [max]="98"></round-progress>
+          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-210%) translateX(33%); font-size: 30px;">  {{actualValuePulse}}/{{maxPulse}}</div>
     </ion-card-content>
   </ion-card>
 

@@ -8,4 +8,43 @@
 
 <ion-content padding>
 
+<!-- {{this.pulseMean}}
+ -->
+ <ion-grid>
+ 	
+ 	<ion-row id="icons-content">
+	 	<ion-col col-6 class="icons-mean"><ion-icon name="custom-cloud" style="width: 100%; height: 100%"></ion-icon></ion-col>
+	    <ion-col col-6 class="icons-mean"><ion-icon name="custom-graph" style="width: 100%; height: 100%"></ion-icon></ion-col>
+ 	</ion-row>
+
+ 	<ion-row>
+ 		<ion-col col-12 class="subtitle"><ion-item-divider color="light">Mean</ion-item-divider></ion-col>
+ 	</ion-row>
+ 	<ion-row class="value-content">
+ 		<ion-col col-6>{{oxygenMean}}</ion-col>
+ 		<ion-col col-6>{{pulseMean}}</ion-col>
+ 	</ion-row>
+
+ 	<ion-row>
+ 		<ion-col col-12 class="subtitle"><ion-item-divider color="light">Readings</ion-item-divider></ion-col>
+ 	</ion-row>
+
+ 	<ion-row class="value-content">
+ 		<ion-col col-6>{{oxygenReadings}}</ion-col>
+ 		<ion-col col-6>{{pulseReadings}}</ion-col>
+ 	</ion-row>
+ 	<ion-row>
+ 		<ion-col col-12 class="subtitle"><ion-item-divider color="light">{{actualDate}}</ion-item-divider></ion-col>
+ 	</ion-row>
+
+ 	<ion-row>
+ 		<ion-col col-12 width="100%">
+        <button ion-button (click)="updateValues()" color="light" block style="margin-top:10%">
+          REFRESH!
+        </button></ion-col>
+ 	</ion-row> 	
+ </ion-grid>
+
+    <!-- <ion-col col-6>{{this.oxygenMean}}</ion-col> -->
+
 </ion-content>

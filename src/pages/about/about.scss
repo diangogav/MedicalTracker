@@ -1,3 +1,44 @@
 page-about {
 
+	ion-icon {
+	  &[class*="custom-"] {
+	    mask-size: contain;
+	    mask-position: 50% 50%;
+	    mask-repeat: no-repeat;
+	    background: currentColor;
+	    width: 1em;
+	    height: 1em;
+	  }
+
+	  &[class*="custom-cloud"] {
+	    mask-image: url(../assets/icons/cloud.svg);
+	    color: blue;
+	  }
+	  &[class*="custom-graph"] {
+	    mask-image: url(../assets/icons/graph.svg);
+	    color: red;
+	  }
+	}
+
+	ion-grid{
+		height: 100%;
+	}
+
+	#icons-content{
+		margin-top: 10%;
+		height: 33.33%;
+	}
+
+	#data-content{
+		height: 33.33%;
+	}
+
+	.subtitle{
+		text-align: center;
+	}
+
+	.value-content{
+		text-align: center;
+	}
+
 }

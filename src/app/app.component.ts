@@ -25,7 +25,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.auth.Session.subscribe(session=>{
         if(session){
-            this.rootPage = HomePage;
+            this.rootPage = TabsPage;
         }
           else{
             this.rootPage = LoginPage;
