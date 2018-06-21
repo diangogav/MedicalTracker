@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      About
+      Today's data
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -21,8 +21,8 @@
  		<ion-col col-12 class="subtitle"><ion-item-divider color="light">Mean</ion-item-divider></ion-col>
  	</ion-row>
  	<ion-row class="value-content">
- 		<ion-col col-6>{{oxygenMean}}</ion-col>
- 		<ion-col col-6>{{pulseMean}}</ion-col>
+ 		<ion-col col-6 style="color:blue">{{oxygenMean}}</ion-col>
+ 		<ion-col col-6 style="color:red">{{pulseMean}}</ion-col>
  	</ion-row>
 
  	<ion-row>
@@ -30,11 +30,11 @@
  	</ion-row>
 
  	<ion-row class="value-content">
- 		<ion-col col-6>{{oxygenReadings}}</ion-col>
- 		<ion-col col-6>{{pulseReadings}}</ion-col>
+ 		<ion-col col-6 style="color:blue">{{readings}}</ion-col>
+ 		<ion-col col-6 style="color:red">{{readings}}</ion-col>
  	</ion-row>
  	<ion-row>
- 		<ion-col col-12 class="subtitle"><ion-item-divider color="light">{{actualDate}}</ion-item-divider></ion-col>
+ 		<ion-col col-12 class="subtitle"><ion-item-divider color="light">Last Hour: {{actualTime}}</ion-item-divider></ion-col>
  	</ion-row>
 
  	<ion-row>

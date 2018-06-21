@@ -7,16 +7,42 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>record</ion-title>
+    <ion-title>Record</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-    <ion-card-content *ngFor='let item of itemsArray'>
-        <h1>{{item}}</h1>
-          
-    </ion-card-content>
+
 
 <ion-content padding>
+
+  <ion-row style="text-align: center"><ion-col col-12><h2>{{actualDate}}</h2></ion-col></ion-row>
+    <ion-row style="text-align:center">
+        <ion-col col-4><ion-icon name="time"></ion-icon></ion-col>
+        <ion-col col-4><ion-icon name="custom-cloud"></ion-icon></ion-col>
+        <ion-col col-4><ion-icon name="custom-graph"></ion-icon></ion-col>
+    </ion-row>
+    <ion-row style="text-align:center">
+        <ion-col col-4> Hour</ion-col>
+        <ion-col col-4>Oxygen</ion-col>
+        <ion-col col-4> Pulse</ion-col>
+    </ion-row>
+
+  <ion-grid  *ngFor='let item of items'>
+
+    <ion-row style="background-color: #d8d7d7 ">
+      <ion-col col-4 style="text-align: center">
+        {{item.actualHour}}    
+      </ion-col>
+      <ion-col col-4 style="text-align: center">
+          {{item.oxygen}}
+      </ion-col>
+      <ion-col col-4 style="text-align: center">
+            {{item.pulse}}
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
 
 </ion-content>

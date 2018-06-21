@@ -35,8 +35,6 @@ export class RecordPage {
 
     ionViewDidEnter(){
 
-
-
 	    var date = new Date();
 	    this.actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);	
 	    this.user = this.auth.getUser();
@@ -70,10 +68,9 @@ export class RecordPage {
 
 			  });
 
-	        	console.log(this.items);
+			  console.log(this.items);
 
 		});
-
 	}
 
 }

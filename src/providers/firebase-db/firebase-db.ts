@@ -24,17 +24,19 @@ export class FirebaseDbProvider {
     return this.afDB.database.ref('Users/'+this.auth.getUser()+'/'+data.section).push(data)
  }
 
- saveOxygenData(data){
+ saveOxygenData(id,oxygen,pulse){
     
     var date = new Date();
     var actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
     var actualHour = date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2) + ':'+ ('0' + date.getSeconds()).slice(-2);
 
     var jsonVariable = {};
-
-      jsonVariable[actualHour] = data;    
-     //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/oxigeno').child(actualDate);
-     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/'+actualDate).child('oxigeno');
+    
+    jsonVariable['actualHour'] = actualHour;    
+    jsonVariable['oxygen'] = oxygen;    
+    jsonVariable['pulse'] = pulse;    
+    //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/oxigeno').child(actualDate);
+     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/'+actualDate).child(actualHour);
      return chartRef.update(jsonVariable)
     //return this.afDB.database.ref.child('Users/'+this.auth.getUser()+'/chart/oxigeno')
  }

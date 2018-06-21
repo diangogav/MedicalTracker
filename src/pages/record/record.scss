@@ -1,3 +1,20 @@
 page-record {
-
+	ion-icon {
+        &[class*="custom-"] {
+          mask-size: contain;
+          mask-position: 50% 50%;
+          mask-repeat: no-repeat;
+          background: currentColor;
+          width: 1em;
+          height: 1em;
+        }
+  
+        &[class*="custom-cloud"] {
+          mask-image: url(../assets/icons/cloud.svg);
+        }
+        &[class*="custom-graph"] {
+          mask-image: url(../assets/icons/graph.svg);
+        }
+      }
+  
 }

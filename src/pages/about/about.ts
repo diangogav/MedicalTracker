@@ -12,14 +12,17 @@ export class AboutPage {
   oxygen;
   oxygenArray:any[] = [];
   pulse;
-  pulseArray:any[] = [];
+  dataArray:any[] = [];
   user;
   oxygenMean = 0;
   pulseMean = 0;
   actualDate;
   actualTime;
   oxygenReadings;
-  pulseReadings;
+  readings;
+  pulseAcum = 0;
+  oxygenAcum = 0;
+
   constructor(
   	    
   	public navCtrl: NavController, 
@@ -47,77 +50,52 @@ export class AboutPage {
 
 	            toast.present();   
 	     		
-	            	this.getPulses();
-	            	this.getOxygens();
+	            	this.getDataMean();
 
 				toast.dismiss();
 
 }
 
-	getPulses(){
+	getDataMean(){
 
 		//this.pulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+this.actualDate);
-		this.pulse = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate+'/pulso');
+		this.pulse = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate);
 		    this.pulse.once('value',(dataSnapshot) => {
 		          
 
-		        this.pulseArray = [];
+		        this.dataArray = [];
 
 		        dataSnapshot.forEach((childSnapshot) => {
 
-		        this.pulseArray.push(childSnapshot.val());
+		        this.dataArray.push(childSnapshot.val());
 
-				this.pulseReadings = this.pulseArray.length;
+				this.dataArray.forEach((dat) => {
+					this.pulseAcum= this.pulseAcum + dat.pulse;
+					this.oxygenAcum = this.oxygenAcum + dat.oxygen
+				});				
 
-		       	this.pulseArray.forEach((pulseDat) => {
+				this.actualTime = this.dataArray[this.dataArray.length - 1].actualHour;
 
-		       		this.pulseMean = this.pulseMean + pulseDat;
-		       	});
+				this.pulseMean = this.pulseAcum / this.dataArray.length;
+				this.oxygenMean = this.oxygenAcum / this.dataArray.length;
 
-		       	this.pulseMean = this.pulseMean / this.pulseArray.length;
+				this.pulseMean = parseFloat(this.pulseMean.toFixed(2));
+				this.oxygenMean = parseFloat(this.oxygenMean.toFixed(2));
 
-		       	this.pulseMean = parseFloat(this.pulseMean.toFixed(2));
+				this.pulseAcum = 0;
+				this.oxygenAcum = 0;
+				
+				this.readings = this.dataArray.length;
+
 
 		      }); 	        
 		  });
 
 	}
 
-	getOxygens(){
-
-			//this.oxygen = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+this.actualDate);
-			this.oxygen = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate+'/oxigeno');
-		    
-		    this.oxygen.once('value',(dataSnapshot) => {
-	          
-
-	        this.oxygenArray = [];
-
-	        dataSnapshot.forEach((childSnapshot) => {
-
-	        this.oxygenArray.push(childSnapshot.val());
-			
-			this.oxygenReadings = this.oxygenArray.length;
-
-	       	this.oxygenArray.forEach((oxygenDat) => {
-
-	       		this.oxygenMean = this.oxygenMean + oxygenDat;
-	       	});
-
-	       	this.oxygenMean = this.oxygenMean / this.oxygenArray.length;
-
-	       	this.oxygenMean = parseFloat(this.oxygenMean.toFixed(2));
-
-
-
-	      }); 	        
-	  });
-
-	}
 
 	updateValues(){
-		this.getPulses();
-		this.getOxygens();
+		this.getDataMean();
 	}
 
 }

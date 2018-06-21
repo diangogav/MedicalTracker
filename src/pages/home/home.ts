@@ -36,7 +36,11 @@ export class HomePage {
   timerVar;
   xArrayPulse: any[] = [];
   yArrayPulse: any[] = [];
+  oxygenArray: any[] = [];
+  pulseArray: any[] = [];
+  timeArray: any[] = [];
   actualValuePulse: any[];
+  i=0;
 
   constructor(
       public navCtrl: NavController,
@@ -50,38 +54,33 @@ export class HomePage {
         var date = new Date();
         var actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
         this.user = this.auth.getUser();
-        console.log(this.user);
+        //console.log(this.user);
         //this.items = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+actualDate).limitToLast(10);
-        this.items = firebase.database().ref('Users/'+this.user+'/chart/'+actualDate+'/oxigeno').limitToLast(10);
+        this.items = firebase.database().ref('Users/'+this.user+'/chart/'+actualDate).limitToLast(10);
         this.items.on('value',(snapshot) => {
+
             this.xArray.splice(0,this.xArray.length);
             this.yArray.splice(0,this.yArray.length);
+            this.oxygenArray.splice(0,this.oxygenArray.length);
+            this.pulseArray.splice(0,this.pulseArray.length);
+            this.timeArray.splice(0,this.timeArray.length);
+
             snapshot.forEach((childSnapshot) => {
-              this.xArray.push(childSnapshot.key);
               this.yArray.push(childSnapshot.val());
             });
-            console.log(this.xArray);
-            console.log(this.yArray);
-            this.actualValue = this.yArray[this.yArray.length - 1]
-            this.chartData(this.yArray,this.xArray);
+            
+            this.yArray.forEach((data=> {
+              this.oxygenArray.push(data.oxygen);
+              this.pulseArray.push(data.pulse);
+              this.timeArray.push(data.actualHour);
+            }))
+
+            this.actualValue = this.oxygenArray[this.oxygenArray.length - 1]
+            this.actualValuePulse = this.pulseArray[this.pulseArray.length - 1]
+            this.chartDataPulse(this.pulseArray,this.timeArray);
+            this.chartData(this.oxygenArray,this.timeArray);
+
           });
-
-          //this.itemsPulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+actualDate).limitToLast(10);
-          this.itemsPulse = firebase.database().ref('Users/'+this.user+'/chart/'+actualDate+'/pulso').limitToLast(10);
-          this.itemsPulse.on('value',(snapshot) => {
-              this.xArrayPulse.splice(0,this.xArrayPulse.length);
-              this.yArrayPulse.splice(0,this.yArrayPulse.length);
-              snapshot.forEach((childSnapshot) => {
-                this.xArrayPulse.push(childSnapshot.key);
-                this.yArrayPulse.push(childSnapshot.val());
-              });
-              console.log(this.xArrayPulse);
-              console.log(this.yArrayPulse);
-              this.actualValuePulse = this.yArrayPulse[this.yArrayPulse.length - 1]
-              this.chartDataPulse(this.yArrayPulse,this.xArrayPulse);
-            });
-
-
   }
 //********************************************************************************
 //GRÁFICA 2
@@ -178,8 +177,9 @@ export class HomePage {
       startTimer(){
 
         this.timerVar = Observable.interval(5000).subscribe(x => {
-                  this.firebasedatabase.saveOxygenData(Math.round(Math.random()*(this.maxOxygen-75)+75))
-                  this.firebasedatabase.savePulseData(Math.round(Math.random()*(this.maxPulse-75)+75))
+                  this.i++;
+                  this.firebasedatabase.saveOxygenData(this.i,Math.round(Math.random()*(this.maxOxygen-75)+75),Math.round(Math.random()*(this.maxPulse-75)+75))
+                  //this.firebasedatabase.savePulseData(Math.round(Math.random()*(this.maxPulse-75)+75))
         })
 
       }
