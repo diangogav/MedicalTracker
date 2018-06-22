@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams,ToastController } from 'ionic-angular';
 import firebase from 'firebase';
+import 'rxjs/add/operator/do';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AuthProvider } from '../../providers/auth/auth';
-import {Observable} from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import * as _ from 'lodash'
+
+
 
 /**
  * Generated class for the RecordPage page.
@@ -22,6 +26,18 @@ export class RecordPage {
   user;
   data;
   items: any[] = [];
+  itemsLoader: any[] = [];
+  initPointer = 0;
+  endPointer = 0;
+  limit: number = 20;
+  
+
+
+  referenceToOldestKey = '';
+
+
+
+
 
   constructor(
   	public navCtrl: NavController, 
@@ -31,6 +47,8 @@ export class RecordPage {
     public toastCtrl: ToastController
   	
   	) {
+
+	    let oxymeter = this.afDB.list('Users/'+this.user+'/chart/'+this.actualDate);
   }
 
     ionViewDidEnter(){
@@ -39,40 +57,118 @@ export class RecordPage {
 	    this.actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);	
 	    this.user = this.auth.getUser();
 
-	            let toast = this.toastCtrl.create({
-	                message: "Actualizando... ",
-	                position: 'top',
-	                dismissOnPageChange: true
-	              });
 
-	            toast.present();   
+
+
+
+	   //          let toast = this.toastCtrl.create({
+	   //              message: "Actualizando... ",
+	   //              position: 'top',
+	   //              dismissOnPageChange: true
+	   //            });
+
+	   //          toast.present();   
 	     		
 	            	this.getData();
 
-				toast.dismiss();
+				// toast.dismiss();
 
 	}
+
+
+	doInfinite(): Promise<any> {
+
+
+
+	    console.log('Begin async operation');
+
+	    return new Promise((resolve) => {
+	      setTimeout(() => {
+
+	            	this.getData();
+
+	      	console.log(this.items);
+	        console.log('Async operation has ended');
+	        resolve();
+	      }, 500);
+	    })
+	 }
 
 
 	getData(){
 
-			this.data = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate);
+		if (!this.referenceToOldestKey) { // if initial fetch
+		 
+		  firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate)
+		   .orderByKey()
+		   .limitToLast(20)
+		   .once('value')
+		   .then((snapshot) => { 
+		      // changing to reverse chronological order (latest first)
+		      let arrayOfKeys = Object.keys(snapshot.val())
+		         .sort()
+		         .reverse();
+		      // transforming to array
 
-			    this.data.once('value',(dataSnapshot) => {
-			          
-			    this.items = [];
+		      console.log(arrayOfKeys);
+		      let results = arrayOfKeys
+		         .map((key) => snapshot.val()[key]);
 
-	        	dataSnapshot.forEach((childSnapshot) => {
+		         console.log(results);
+		      // storing reference
+		      this.referenceToOldestKey = arrayOfKeys[arrayOfKeys.length-1];
+		      console.log(this.referenceToOldestKey);
 
-	        		this.items.push(childSnapshot.val());
+		      results.forEach(data => {
+		      	this.items.push(data);
+		      })
 
-			  });
+		      console.log(this.items);
+		 
+		      // Do what you want to do with the data, i.e.
+		      // append to page or dispatch({ … }) if using redux
+		   })
+		   .catch((error) => {  } );
+		 
+		 } else {
 
-			  console.log(this.items);
+		 	this.items = [];
+		 
+		   firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate)
+		    .orderByKey()
+		    .endAt(this.referenceToOldestKey)
+		    .limitToLast(21)
+		    .once('value')
+		    .then((snapshot) => {
+		      // changing to reverse chronological order (latest first)
+		      // & removing duplicate
+		      let arrayOfKeys = Object.keys(snapshot.val())
+		          .sort()
+		          .reverse()
+		          .slice(1);
 
-		});
-	}
+		          console.log("Array de keys:",arrayOfKeys);
+		       // transforming to array
+		       let results = arrayOfKeys
+		          .map((key) => snapshot.val()[key]);
+		          console.log("array de val: ", results);
+		       // updating reference
+		       this.referenceToOldestKey = arrayOfKeys[arrayOfKeys.length-1];
+		       console.log("nueva referencia:",this.referenceToOldestKey);
+		       // Do what you want to do with the data, i.e.
+		       // append to page or dispatch({ … }) if using redux
+		       	results.forEach(data => {
+		      	this.items.push(data);
+		      });
 
+		      console.log(this.items);
+
+		    })
+		   .catch((error) => {  } );
+		 
+		 }
+ 
+}
 }
 
 
