@@ -53,6 +53,8 @@ export class RecordPage {
 
     ionViewDidEnter(){
 
+    	this.items = [];
+
 	    var date = new Date();
 	    this.actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);	
 	    this.user = this.auth.getUser();
@@ -132,7 +134,7 @@ export class RecordPage {
 		 
 		 } else {
 
-		 	this.items = [];
+		 	
 		 
 		   firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate)
 		    .orderByKey()
@@ -157,7 +159,7 @@ export class RecordPage {
 		       console.log("nueva referencia:",this.referenceToOldestKey);
 		       // Do what you want to do with the data, i.e.
 		       // append to page or dispatch({ … }) if using redux
-		       	results.forEach(data => {
+		       results.forEach(data => {
 		      	this.items.push(data);
 		      });
 
