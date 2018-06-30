@@ -7,22 +7,44 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>gender</ion-title>
+    <ion-title>Gender</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <ion-item>
-    <ion-label>Gender</ion-label>
-    <ion-select [(ngModel)]="gender">
-      <ion-option value="female">Female</ion-option>
-      <ion-option value="male">Male</ion-option>
-      <ion-option value="other">Other</ion-option>
-    </ion-select>
-  </ion-item>
-  <button ion-button (click)="saveGender()" type="submit"color="primary" block>
-      Next
-  </button>
+<ion-content padding class="bg">
+
+    <ion-grid>
+ 	
+        <ion-row id="icons-content">
+          <ion-col col-6 class="icons-mean" style="color: red"><ion-icon name="female"></ion-icon></ion-col>
+           <ion-col col-6 class="icons-mean" style="color: blue"><ion-icon name="male"></ion-icon></ion-col>
+        </ion-row>
+     
+     
+     
+        <ion-row>
+          <ion-col col-12>
+             <ion-item>
+                 <ion-label>Gender</ion-label>
+                 <ion-select [(ngModel)]="gender">
+                   <ion-option value="female">Female</ion-option>
+                   <ion-option value="male">Male</ion-option>
+                   <ion-option value="other">Other</ion-option>
+                 </ion-select>
+               </ion-item>
+          </ion-col>
+        </ion-row>
+     
+        <ion-row>
+          <ion-col col-12 width="100%">
+             <button ion-button (click)="saveGender()" type="submit"color="primary" block>
+                 Next
+             </button>
+          </ion-col>
+        </ion-row> 	
+      </ion-grid>
+
 </ion-content>
+

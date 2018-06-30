@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class DataProvider {
 
-  gender;stature;weight;age;username;email;password;pulseArray;oxygenArray;
+  gender;stature;weight;age;username;email;password;pulseArray;oxygenArray;name;lastname;
 
   constructor() {
     console.log('Hello DataProvider Provider');
@@ -62,6 +62,17 @@ export class DataProvider {
     console.log(this.oxygenArray);
   }
 
+  setName(name){
+    this.name = name;
+    console.log()
+  }
+
+  
+  setLastname(lastname){
+    this.lastname = lastname;
+    console.log()
+  }
+
   getGender(){
     return this.gender;
   }
@@ -100,5 +111,12 @@ export class DataProvider {
     return this.oxygenArray;
   }
 
+  getName(){
+    return this.name;
+  }
+
+  getLastname(){
+    return this.lastname;
+  }
 
 }

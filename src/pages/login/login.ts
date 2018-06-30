@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams,AlertController, LoadingController  } from 'ionic-angular';
 import { AuthProvider } from '../../providers/auth/auth';
 import { GenderPage } from '../gender/gender';
+import { SignupPage }from '../signup/signup';
 
 /**
  * Generated class for the LoginPage page.
@@ -33,36 +34,27 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  signin(){
+  signup(){
+
+    this.navCtrl.push(SignupPage);
+  }
+
+  login(){
 
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
-
+    
     loading.present();
 
-    this.auth.registerUser(this.user.email,this.user.password)
-    .then((user) => {
-        loading.dismiss();
-    })
-    .catch(err=>{
-      loading.dismiss();
-      let alert = this.alertCtrl.create({
-        title: 'Error',
-        subTitle: err.message,
-        buttons: ['Aceptar']
-      });
-      alert.present();
-    })
-
-  }
-
-  login()
-{
     this.auth.loginUser(this.user.email,this.user.password ).then((user) => {
-      }
-    )
-     .catch(err=>{
+
+      loading.dismiss();
+
+  }).catch(err=>{
+
+      loading.dismiss();
+
       let alert = this.alertCtrl.create({
         title: 'Error',
         subTitle: err.message,

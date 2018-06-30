@@ -1,8 +1,7 @@
 import { Component,ViewChild } from '@angular/core';
-import { NavController,AlertController,IonicPage  } from 'ionic-angular';
+import { NavController,AlertController,ToastController  } from 'ionic-angular';
 import { Chart } from 'chart.js';
-import { ViewPage } from '../view/view';
-import { AngularFireList, AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import firebase from 'firebase';
 import { AuthProvider } from '../../providers/auth/auth';
@@ -18,6 +17,9 @@ export class HomePage {
 
   @ViewChild('lineCanvas') lineCanvas;
   @ViewChild('lineCanvas2') lineCanvas2;
+
+  //=========================================================================================
+  //Variables
   maxOxygen = 98;
   maxPulse = 98;
   lineChart: any;
@@ -26,37 +28,49 @@ export class HomePage {
   xArray: any[] = [];
   yArray: any[] = [];
   actualValue: any[];
-  myInput;
-  flag = false;
-  flag2 = true;
-  flag3 = false;
-  flag4 = true;
+  viewChartOxygen = false;
+  viewCircularOxygen = true;
+  viewChartPulse = false;
+  viewCircularPulse = true;
   user;
-  timerVal;
   timerVar;
-  xArrayPulse: any[] = [];
-  yArrayPulse: any[] = [];
   oxygenArray: any[] = [];
   pulseArray: any[] = [];
   timeArray: any[] = [];
   actualValuePulse: any[];
+  actualValueTime;
   i=0;
-
+//=============================================================================================
   constructor(
       public navCtrl: NavController,
       public database: AngularFireDatabase,
       public alertCtrl: AlertController,
       private auth: AuthProvider,
-      private firebasedatabase: FirebaseDbProvider
+      private firebasedatabase: FirebaseDbProvider,
+      public toastCtrl: ToastController
     ) {
 
+        //Actual Date
         this.startTimer();
         var date = new Date();
         var actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+       //Current User
         this.user = this.auth.getUser();
-        //console.log(this.user);
-        //this.items = firebase.database().ref('Users/'+this.user+'/chart/oxigeno/'+actualDate).limitToLast(10);
-        this.items = firebase.database().ref('Users/'+this.user+'/chart/'+actualDate).limitToLast(10);
+        //=================================================================================================
+        //Get Firebase Data To oxygenArray, pulseArray, timeArray
+
+        //************************************ */
+        //Spinner
+        let toast = this.toastCtrl.create({
+          message: 'Loading Data',
+          position: 'top'
+        });
+    
+        toast.present();
+
+        setTimeout(() => {
+        //************************************ */
+        this.items = firebase.database().ref('UsersChart/'+this.user+'/'+'date: ' + actualDate).limitToLast(10);
         this.items.on('value',(snapshot) => {
 
             this.xArray.splice(0,this.xArray.length);
@@ -77,13 +91,22 @@ export class HomePage {
 
             this.actualValue = this.oxygenArray[this.oxygenArray.length - 1]
             this.actualValuePulse = this.pulseArray[this.pulseArray.length - 1]
+            this.actualValueTime = this.timeArray[this.timeArray.length - 1 ]
             this.chartDataPulse(this.pulseArray,this.timeArray);
             this.chartData(this.oxygenArray,this.timeArray);
 
+            toast.dismiss();
           });
+          //End Get Firebase Data
+          //================================================================================================
+        }, 5000);
+      
+        toast.dismiss();
   }
+
 //********************************************************************************
-//GRÁFICA 2
+//Pulse Chart
+
        chartDataPulse(values,labels){
         this.lineChart = new Chart(this.lineCanvas2.nativeElement, {      
             type: 'line',
@@ -113,7 +136,12 @@ export class HomePage {
                         spanGaps: false,
                     }
                 ]
-            }
+            },
+            options: {
+              animation: {
+                duration: 300
+              }
+          }
         });
       } 
 
@@ -150,30 +178,37 @@ export class HomePage {
                         spanGaps: false,
                     }
                 ]
-            }
+            },
+            options: {
+              animation: {
+                duration: 300
+              }
+          }
         });
       } 
 
-     
-      hidden(){
-        this.flag = true;
-        this.flag2 = false;
+      // Change char view to circular view -->
+      hiddenChartOxygen(){
+        this.viewChartOxygen = true;
+        this.viewCircularOxygen = false;
       }
 
-      hidden2(){
-        this.flag2= true;
-        this.flag = false;
+      hiddenCircularOxygen(){
+        this.viewCircularOxygen= true;
+        this.viewChartOxygen = false;
       }
-      hidden3(){
-        this.flag3 = true;
-        this.flag4 = false;
+      hiddenPulseChart(){
+        this.viewChartPulse = true;
+        this.viewCircularPulse = false;
       }
-      hidden4(){
-        this.flag3 = false;
-        this.flag4 = true;
+      hiddenCircularPulse(){
+        this.viewChartPulse = false;
+        this.viewCircularPulse = true;
       }
+      //end change
 
 
+      //Data to database
       startTimer(){
 
         this.timerVar = Observable.interval(5000).subscribe(x => {

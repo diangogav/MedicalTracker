@@ -7,18 +7,37 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>age</ion-title>
+    <ion-title>Age</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <ion-item>
-    <ion-label>Date</ion-label>
-    <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="myDate"></ion-datetime>
-  </ion-item>
-  <button ion-button (click)="saveAge()" type="submit"color="primary" block>
-    Finish
-</button>
+
+<ion-content padding class="bg">
+
+    <ion-grid>
+ 	
+        <ion-row id="icons-content">
+            <ion-col col-12 class="icons-mean" style="color: blue"><ion-icon name="time"></ion-icon></ion-col>
+          </ion-row>
+
+        <ion-row>
+          <ion-col col-12>
+              <ion-item>
+                  <ion-label>Date</ion-label>
+                  <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="myDate"></ion-datetime>
+                </ion-item>
+          </ion-col>
+        </ion-row>
+     
+        <ion-row>
+          <ion-col col-12 width="100%">
+              <button ion-button (click)="saveAge()" type="submit"color="primary" block>
+                  Next
+              </button>
+          </ion-col>
+        </ion-row> 	
+      </ion-grid>
+
 </ion-content>

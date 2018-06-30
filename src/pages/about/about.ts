@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams,ToastController,LoadingController } from 'ionic-angular';
+import { NavController, NavParams,ToastController } from 'ionic-angular';
 import firebase from 'firebase';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthProvider } from '../../providers/auth/auth';
+import { FirebaseDbProvider } from '../../providers/firebase-db/firebase-db';
 
 @Component({
   selector: 'page-about',
   templateUrl: 'about.html'
 })
 export class AboutPage {
-  oxygen;
-  oxygenArray:any[] = [];
+
   pulse;
   dataArray:any[] = [];
   user;
@@ -18,7 +18,6 @@ export class AboutPage {
   pulseMean = 0;
   actualDate;
   actualTime;
-  oxygenReadings;
   readings;
   pulseAcum = 0;
   oxygenAcum = 0;
@@ -29,44 +28,49 @@ export class AboutPage {
     public navParams: NavParams,
     public afDB: AngularFireDatabase,
     public toastCtrl: ToastController,
-    public loadingCtrl: LoadingController,
     private auth: AuthProvider,
+    private data: FirebaseDbProvider
 
   	) {}
 
     ionViewDidEnter(){
 
 
-
+		//Actual Date
 	    var date = new Date();
 	    this.actualDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);	
 	    this.user = this.auth.getUser();
 
-	            let toast = this.toastCtrl.create({
-	                message: "Actualizando... ",
-	                position: 'top',
-	                dismissOnPageChange: true
-	              });
 
-	            toast.present();   
+   
 	     		
 	            	this.getDataMean();
 
-				toast.dismiss();
-
+			
 }
 
+
+//=========================================================================================================
+// Get Data From Firebase and show in the view
 	getDataMean(){
 
-		//this.pulse = firebase.database().ref('Users/'+this.user+'/chart/pulso/'+this.actualDate);
-		this.pulse = firebase.database().ref('Users/'+this.user+'/chart/'+this.actualDate);
+		this.pulse = firebase.database().ref('UsersChart/'+this.user+'/'+ 'date: ' + this.actualDate);
+
+		//Spinner
+        let toast = this.toastCtrl.create({
+			message: 'Loading Data',
+			position: 'top'
+		  });
+	  
+
+		  toast.present();
+			
 		    this.pulse.once('value',(dataSnapshot) => {
 		          
 
 		        this.dataArray = [];
 
 		        dataSnapshot.forEach((childSnapshot) => {
-
 		        this.dataArray.push(childSnapshot.val());
 
 				this.dataArray.forEach((dat) => {
@@ -87,15 +91,27 @@ export class AboutPage {
 				
 				this.readings = this.dataArray.length;
 
+				toast.dismiss();
 
 		      }); 	        
-		  });
+		  	})
+		
+
 
 	}
 
-
+//=========================================================================================================
+//Refresh data
 	updateValues(){
-		this.getDataMean();
+
+	     		
+		  this.getDataMean();
+
 	}
+
+	delete(){
+		this.data.deleteData();
+	}
+	
 
 }

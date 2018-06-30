@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data/data';
 import { FirebaseDbProvider } from '../../providers/firebase-db/firebase-db';
 import { TabsPage } from '../tabs/tabs';
+import { AuthProvider } from '../../providers/auth/auth';
 /**
  * Generated class for the FinishPage page.
  *
@@ -23,7 +24,11 @@ personalData;
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	private dataUser: DataProvider,
-    private firebasedatabase: FirebaseDbProvider
+    private firebasedatabase: FirebaseDbProvider,
+    public loadingCtrl : LoadingController,
+    public toastCtrl : ToastController,
+    public auth : AuthProvider
+
     ) {
   }
 
@@ -34,16 +39,49 @@ personalData;
   saveUser(){
   	this.personalData = {
 
-  	  username: "Diango",
+
+      email: this.dataUser.getEmail(),
+      name: this.dataUser.getName(),
+      lastname: this.dataUser.getLastname(),
       gender: this.dataUser.getGender(),
       weight: this.dataUser.getWeight(),
       stature: this.dataUser.getStature(),
       age: this.dataUser.getAge()
     }
 
-    this.firebasedatabase.savePersonalData(this.personalData).then(res=>{
-      console.log('Usuario guardado en firebase');
-      this.navCtrl.push(TabsPage);
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+
+    loading.present();
+    
+
+    this.auth.registerUser(this.personalData.email,this.dataUser.getPassword())
+    .then((user) => {
+
+      this.personalData.id = this.auth.getUser();
+      
+      this.firebasedatabase.savePersonalData(this.personalData).then(res=>{
+           loading.dismiss();
+           let toast = this.toastCtrl.create({
+                message: "Se ha registrado correctamente",
+                duration: 3000,
+                position: 'top'
+              });
+  
+             toast.present();        
+             this.navCtrl.push(TabsPage);
+      })
+    })
+    .catch(err=>{
+              loading.dismiss();     
+              let toast = this.toastCtrl.create({
+                message: err,
+                duration: 3000,
+                position: 'top'
+              });
+  
+             toast.present();   
     })
   }
 

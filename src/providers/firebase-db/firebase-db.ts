@@ -1,4 +1,4 @@
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthProvider } from '../auth/auth';
 import { Injectable } from '@angular/core';
 import firebase from "firebase";
@@ -15,13 +15,13 @@ export class FirebaseDbProvider {
 
   constructor(
     public afDB: AngularFireDatabase, 
-    public auth: AuthProvider) {
+    public auth: AuthProvider
+) {
     console.log('Hello FirebaseDbProvider Provider');
   }
 
   savePersonalData(data){
-    data.section  = "Personal Data";
-    return this.afDB.database.ref('Users/'+this.auth.getUser()+'/'+data.section).push(data)
+    return this.afDB.database.ref('Users/'+ data.name + ' ' + data.lastname + ': ' + this.auth.getUser()).set(data)
  }
 
  saveOxygenData(id,oxygen,pulse){
@@ -36,7 +36,7 @@ export class FirebaseDbProvider {
     jsonVariable['oxygen'] = oxygen;    
     jsonVariable['pulse'] = pulse;    
     //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/oxigeno').child(actualDate);
-     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/'+actualDate).child(actualHour);
+     var chartRef = firebase.database().ref('UsersChart/' + this.auth.getUser()+ '/'+ 'date: ' + actualDate).child(actualHour);
      return chartRef.update(jsonVariable)
     //return this.afDB.database.ref.child('Users/'+this.auth.getUser()+'/chart/oxigeno')
  }
@@ -51,9 +51,13 @@ export class FirebaseDbProvider {
 
       jsonVariable[actualHour] = data;    
      //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/pulso').child(actualDate);
-     var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/'+actualDate).child('pulso');
+     var chartRef = firebase.database().ref('UsersChart/'+this.auth.getUser()+'/'+actualDate).child('pulso');
      return chartRef.update(jsonVariable)
     //return this.afDB.database.ref.child('Users/'+this.auth.getUser()+'/chart/oxigeno')
+ }
+
+ deleteData(){
+  this.afDB.database.ref('Users').remove();
  }
 
 }

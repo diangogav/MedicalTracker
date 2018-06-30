@@ -7,19 +7,38 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>stature</ion-title>
+    <ion-title>Stature</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
-    <ion-item [(ngModel)]="stature">
-      <ion-input type="number" placeholder="1.00" min="1" max="3" step="0.01"></ion-input>
-    </ion-item>
-  </ion-list>
-  <button ion-button (click)="saveStature()" type="submit"color="primary" block>
-    Next
-</button>
+<ion-content padding class="bg">
+
+    <ion-grid>
+ 	
+        <ion-row id="icons-content">
+            <ion-col col-6 class="icons-mean" style="color: blue"><ion-icon name="man"></ion-icon></ion-col>
+            <ion-col col-6 class="icons-mean" style="color: red"><ion-icon name="woman"></ion-icon></ion-col>
+          </ion-row>
+     
+     
+     
+        <ion-row>
+          <ion-col col-12>
+              <ion-item [(ngModel)]="stature">
+                  <ion-input type="number" placeholder="1.00" min="1" max="3" step="0.01"></ion-input>
+                </ion-item>
+          </ion-col>
+        </ion-row>
+     
+        <ion-row>
+          <ion-col col-12 width="100%">
+              <button ion-button (click)="saveStature()" type="submit"color="primary" block>
+                  Next
+              </button>
+          </ion-col>
+        </ion-row> 	
+      </ion-grid>
+
 </ion-content>

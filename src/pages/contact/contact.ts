@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController,App } from 'ionic-angular';
 import { AuthProvider } from '../../providers/auth/auth';
 
 @Component({
@@ -10,12 +10,13 @@ export class ContactPage {
 
   constructor(
   	public navCtrl: NavController,
-  	public auth : AuthProvider
+    public auth : AuthProvider,
+    public app: App,
   	) {
 
   }
 
-  cerrarSesion(){
+  closeSession(){
       this.auth.logout();
   }
 

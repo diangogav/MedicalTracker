@@ -7,14 +7,30 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>finish</ion-title>
+    <ion-title>Save Data</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <button ion-button (click)="saveUser()" type="submit"color="primary" block>
-    Finish
-</button>
+<ion-content padding class="bg">
+
+    <ion-grid>
+ 	
+        <ion-row id="icons-content">
+            <ion-col col-12 class="icons-mean" style="color: white"><ion-icon name="archive"></ion-icon></ion-col>
+          </ion-row>
+     
+     
+    
+     
+        <ion-row>
+          <ion-col col-12 width="100%">
+              <button ion-button (click)="saveUser()" type="submit"color="primary" block>
+                  Finish
+              </button>
+          </ion-col>
+        </ion-row> 	
+      </ion-grid>
+
 </ion-content>

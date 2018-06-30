@@ -1,51 +1,70 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Oxymeter</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="bg">
+    <!-- ======================================================================================================-->
+<!-- Oxygen Chart -->
 
-    <ion-card [hidden] = "flag" (click) = "hidden()" class="card-chart" style="margin-top: 0; height: 50%">
+    <ion-card [hidden] = "viewChartOxygen" (click) = "hiddenChartOxygen()" class="card-chart" style="margin-top: 0; height: 45%">
       <ion-card-header>
         Oxygen (%)
       </ion-card-header>
-      <ion-card-content>
+      <ion-card-content class="content-chart">
+        <!-- Chart Oxygen -->
         <canvas #lineCanvas></canvas>
       </ion-card-content>
     </ion-card>    
+<!-- ======================================================================================================-->
+<!-- Circular Oxygen-->
 
-
-  <ion-card [hidden] = "flag2" (click) = "hidden2()" class="card-number" style="height: 50%">
+  <ion-card [hidden] = "viewCircularOxygen" (click) = "hiddenCircularOxygen()" class="card-number" style="height: 45%">
     <ion-card-header>
       <h2>Oxygen (%)</h2>
     </ion-card-header>
-    <ion-card-content>
-          <round-progress [current]="actualValue" [radius]="70" [color]="'#20BAFC'" [stroke]="15" [max]="98"></round-progress>
-          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-210%) translateX(33%); font-size: 30px;">  {{actualValue}}/{{maxOxygen}}</div>
+    <ion-card-content style="text-align:center"> 
+        <div class="content-circle">
+            <!-- Progress Bar Pulse -->
+           <round-progress [current]="actualValuePulse" [radius]="50" [color]="'#20BAFC'" [stroke]="15" [max]="98" [responsive] = "true"></round-progress>
+           <div class="current" ng-reflect-ng-style="[object Object]" style="position: absolute; font-size: 20px;">  {{actualValuePulse}}/{{maxPulse}}</div>
+           </div>
+
+           <div>{{actualValueTime}}</div>
     </ion-card-content>
   </ion-card>
     
-<!--================================================-->
-  <ion-card [hidden] = "flag3" (click) = "hidden3()" class="card-chart" style="height: 50%">
+<!-- ======================================================================================================-->
+<!-- Pulse Chart -->
+  
+<ion-card [hidden] = "viewChartPulse" (click) = "hiddenPulseChart()" class="card-chart" style="height: 45%">
     <ion-card-header>
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content class="content-chart">
+      <!-- Chart Pulse -->
       <canvas #lineCanvas2></canvas>
     </ion-card-content>
   </ion-card>
   
+<!-- ======================================================================================================-->
+<!-- Circular Pulse -->
 
-
-  <ion-card [hidden] = "flag4" (click) = "hidden4()" class="card-number" style="height: 50%">
+  <ion-card [hidden] = "viewCircularPulse" (click) = "hiddenCircularPulse()" class="card-number" style="height: 45%">
     <ion-card-header>
       <h2>Pulse (PPM)</h2>
     </ion-card-header>
-    <ion-card-content>
-          <round-progress [current]="actualValuePulse" [radius]="70" [color]="'#D60A0A'" [stroke]="15" [max]="98"></round-progress>
-          <div class="current" ng-reflect-ng-style="[object Object]" style="transform: translateY(-210%) translateX(33%); font-size: 30px;">  {{actualValuePulse}}/{{maxPulse}}</div>
+    <ion-card-content style="text-align: center">
+        <div class="content-circle">
+         <!-- Progress Bar Pulse -->
+        <round-progress [current]="actualValuePulse" [radius]="50" [color]="'#D60A0A'" [stroke]="15" [max]="98" [responsive] = "true"></round-progress>
+        <div class="current" ng-reflect-ng-style="[object Object]" style="position: absolute; font-size: 20px;">  {{actualValuePulse}}/{{maxPulse}}</div>
+      </div>
+       
+        <div>{{actualValueTime}}</div>
     </ion-card-content>
   </ion-card>
 
+<!-- ======================================================================================================-->
 </ion-content>

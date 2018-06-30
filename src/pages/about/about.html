@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="bg">
 
 <!-- {{this.pulseMean}}
  -->
@@ -21,8 +21,8 @@
  		<ion-col col-12 class="subtitle"><ion-item-divider color="light">Mean</ion-item-divider></ion-col>
  	</ion-row>
  	<ion-row class="value-content">
- 		<ion-col col-6 style="color:blue">{{oxygenMean}}</ion-col>
- 		<ion-col col-6 style="color:red">{{pulseMean}}</ion-col>
+ 		<ion-col col-6 style="color:white">{{oxygenMean}}</ion-col>
+ 		<ion-col col-6 style="color:white">{{pulseMean}}</ion-col>
  	</ion-row>
 
  	<ion-row>
@@ -30,8 +30,8 @@
  	</ion-row>
 
  	<ion-row class="value-content">
- 		<ion-col col-6 style="color:blue">{{readings}}</ion-col>
- 		<ion-col col-6 style="color:red">{{readings}}</ion-col>
+ 		<ion-col col-6 style="color:white">{{readings}}</ion-col>
+ 		<ion-col col-6 style="color:white">{{readings}}</ion-col>
  	</ion-row>
  	<ion-row>
  		<ion-col col-12 class="subtitle"><ion-item-divider color="light">Last Hour: {{actualTime}}</ion-item-divider></ion-col>
@@ -39,9 +39,11 @@
 
  	<ion-row>
  		<ion-col col-12 width="100%">
-        <button ion-button (click)="updateValues()" color="light" block style="margin-top:10%">
+        <button ion-button (click)="updateValues()" color="light" block>
           REFRESH!
-        </button></ion-col>
+				</button>
+		</ion-col>
+
  	</ion-row> 	
  </ion-grid>
 

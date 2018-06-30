@@ -7,19 +7,37 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>weight</ion-title>
+    <ion-title>Weight</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list>
-    <ion-item [(ngModel)]="weight">
-      <ion-input type="number" placeholder="1.00" min="1" max="200" step="0.1"></ion-input>
-    </ion-item>
-  </ion-list>
-  <button ion-button (click)="saveWeight()" type="submit"color="primary" block>
-    Next
-</button>
+<ion-content padding class="bg">
+
+    <ion-grid>
+ 	
+        <ion-row id="icons-content">
+          <ion-col col-12 class="icons-mean" style="color: red"><ion-icon name="leaf"></ion-icon></ion-col>
+        </ion-row>
+     
+     
+     
+        <ion-row>
+          <ion-col col-12>
+              <ion-item [(ngModel)]="weight">
+                  <ion-input type="number" placeholder="1.00" min="1" max="200" step="0.1"></ion-input>
+                </ion-item>
+          </ion-col>
+        </ion-row>
+     
+        <ion-row>
+          <ion-col col-12 width="100%">
+              <button ion-button (click)="saveWeight()" type="submit"color="primary" block>
+                  Next
+              </button>
+          </ion-col>
+        </ion-row> 	
+      </ion-grid>
+
 </ion-content>
