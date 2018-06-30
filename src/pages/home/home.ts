@@ -70,7 +70,7 @@ export class HomePage {
 
         setTimeout(() => {
         //************************************ */
-        this.items = firebase.database().ref('UsersChart/'+this.user+'/'+'date: ' + actualDate).limitToLast(10);
+        this.items = firebase.database().ref('UsersChart/'+this.user+'/'+ actualDate).limitToLast(10);
         this.items.on('value',(snapshot) => {
 
             this.xArray.splice(0,this.xArray.length);

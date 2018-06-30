@@ -54,7 +54,7 @@ export class AboutPage {
 // Get Data From Firebase and show in the view
 	getDataMean(){
 
-		this.pulse = firebase.database().ref('UsersChart/'+this.user+'/'+ 'date: ' + this.actualDate);
+		this.pulse = firebase.database().ref('UsersChart/'+this.user+'/'+ this.actualDate);
 
 		//Spinner
         let toast = this.toastCtrl.create({

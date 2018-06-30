@@ -36,7 +36,7 @@ export class FirebaseDbProvider {
     jsonVariable['oxygen'] = oxygen;    
     jsonVariable['pulse'] = pulse;    
     //var chartRef = firebase.database().ref('Users/'+this.auth.getUser()+'/chart/oxigeno').child(actualDate);
-     var chartRef = firebase.database().ref('UsersChart/' + this.auth.getUser()+ '/'+ 'date: ' + actualDate).child(actualHour);
+     var chartRef = firebase.database().ref('UsersChart/' + this.auth.getUser()+ '/'+ actualDate).child(actualHour);
      return chartRef.update(jsonVariable)
     //return this.afDB.database.ref.child('Users/'+this.auth.getUser()+'/chart/oxigeno')
  }

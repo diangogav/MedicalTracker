@@ -86,7 +86,7 @@ export class RecordPage {
 
 		}else if (!this.referenceToOldestKey) { // if initial fetch
 
-		  firebase.database().ref('UsersChart/'+this.user+'/'+ 'date: ' + this.actualDate)
+		  firebase.database().ref('UsersChart/'+this.user+'/'+ this.actualDate)
 		   .orderByKey()
 		   .limitToLast(20)
 		   .once('value')
@@ -115,7 +115,7 @@ export class RecordPage {
 		 
 		 } else {
 		 
-		   firebase.database().ref('UsersChart/'+this.user+'/'+'date: ' + this.actualDate)
+		   firebase.database().ref('UsersChart/'+this.user+'/'+ this.actualDate)
 		    .orderByKey()
 		    .endAt(this.referenceToOldestKey)
 		    .limitToLast(21)
