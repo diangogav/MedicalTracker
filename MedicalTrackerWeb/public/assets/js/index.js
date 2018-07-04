@@ -1,10 +1,13 @@
 //************************************************************************************************************************** */
 //***********************************************Variables***************************************************************** */
 //************************************************************************************************************************ */
-
+var userID;
+var userDate;
 var referenceToOldestKey = '';
 var items = [];
-
+var referenceToOldestDate = '';
+var referenceToOldestData = '';
+var beforeDate;
 //************************************************************************************************************************** */
 //***********************************************Firebase Operations******************************************************* */
 //************************************************************************************************************************ */
@@ -205,7 +208,6 @@ function actualDataPoints(id,actualDay){
         actualOxygen.push(data.oxygen);
         actualPulse.push(data.pulse);
         actualHour.push(data.actualHour);
-
     }))
     chart(actualHour,actualOxygen,actualPulse,actualDay);
   })
@@ -217,8 +219,143 @@ function historic(id,date){
   cleanDiv("#content");
   ajax("#content","data.html");
 
+ 
+  if(referenceToOldestDate == undefined){
+
+  }else if (!referenceToOldestDate) { 
+
+        // if initial fetch
+        firebase.database().ref("UsersChart/"+id )
+       .orderByKey()
+       .limitToLast(10)
+       .once('value')
+       .then((snapshot) => { 
+  
+          // changing to reverse chronological order (latest first)
+          var arrayOfKeys = Object.keys(snapshot.val())
+             .sort()
+             .reverse();
+
+             arrayOfKeys.forEach(data => {
+              resultData = listDates(id,data);
+              innerHTML("dates",resultData);
+            })
+             
+  
+          // storing reference
+          referenceToOldestDate = arrayOfKeys[arrayOfKeys.length-1];
+  
+          
+      }).catch((error) => {  } );
+  
+  }else{
+  
+    firebase.database().ref("UsersChart/"+id )
+    .orderByKey()
+    .endAt(referenceToOldestDate)
+    .limitToLast(10)
+    .once('value')
+    .then((snapshot) => {
+  
+      // changing to reverse chronological order (latest first)
+      // & removing duplicate
+      var arrayOfKeys = Object.keys(snapshot.val())
+          .sort()
+          .reverse()
+          .slice(1);
+  
+          arrayOfKeys.forEach(data => {
+            resultData = listDates(id,data);
+            innerHTML("dates",resultData);
+          })
+  
+       // updating reference
+       referenceToOldestDate = arrayOfKeys[arrayOfKeys.length-1];
+
+    }).catch((error) => {  } );
+  
+  }
 
 
+}
+
+function getAllDateData(id,date){
+
+  if(date != beforeDate){
+    referenceToOldestData = '';
+    cleanDiv("#allData");
+  }
+
+  console.log("referencia: ",referenceToOldestData);
+  if(referenceToOldestData == undefined){
+  }else if (!referenceToOldestData) { 
+        // if initial fetch
+        firebase.database().ref("UsersChart/"+id+'/'+ date)
+       .orderByKey()
+       .limitToLast(20)
+       .once('value')
+       .then((snapshot) => { 
+  
+          // changing to reverse chronological order (latest first)
+          var arrayOfKeys = Object.keys(snapshot.val())
+             .sort()
+             .reverse();
+
+
+             var results = arrayOfKeys
+             .map((key) => snapshot.val()[key]);
+
+             referenceToOldestData = arrayOfKeys[arrayOfKeys.length-1];
+
+             results.forEach(data => {
+              var result = listData(data.actualHour,data.oxygen,data.pulse);
+              innerHTML("allData",result);
+            });  
+
+            saveID(id);
+            saveDate(date);
+            beforeDate = date;
+
+        })
+      }else{
+        firebase.database().ref("UsersChart/"+id+'/'+ date)
+        .orderByKey()
+        .endAt(referenceToOldestData)
+        .limitToLast(10)
+        .once('value')
+        .then((snapshot) => {
+      
+          // changing to reverse chronological order (latest first)
+          // & removing duplicate
+          var arrayOfKeys = Object.keys(snapshot.val())
+              .sort()
+              .reverse()
+              .slice(1);
+      
+           // transforming to array
+           var results = arrayOfKeys
+              .map((key) => snapshot.val()[key]);
+      
+           // updating reference
+           referenceToOldestData = arrayOfKeys[arrayOfKeys.length-1];
+           // Do what you want to do with the data, i.e.
+           // append to page or dispatch({ … }) if using redux
+      
+           //Append to the view html
+           results.forEach(data => {
+            var result = listData(data.actualHour,data.oxygen,data.pulse);
+            innerHTML("allData",result);
+
+            saveID(id);
+            saveDate(date);
+            beforeDate = date;
+
+          });
+      
+        
+          
+        }).catch((error) => {  } );
+      }
 }
 //************************************************************************************************************************** */
 //***********************************************Tools Operations///******************************************************* */
@@ -306,6 +443,20 @@ function personalData(gender,age,weight,stature){
          'Weight: ' + weight + '<br>' +
          'Stature: ' + stature + '<br>';
 }
+
+function listDates(id,date){
+
+  return "<li><a href='#'onclick=\"getAllDateData('"+id+"','"+date+"');\">"+date+"</a></li>";
+
+}
+
+function listData(actualHour,oxygen,pulse){
+  return '<tr>'+
+  '<td>'+actualHour+'</td>'+
+  '<td>'+oxygen+'</td>'+
+  '<td>'+pulse+'</td>';
+}
+
 function cleanDiv(id){
 $(id).empty();
 }
@@ -407,9 +558,39 @@ function chart(x,yOxygen,yPulse,actualDay){
 
 }
 
+function saveReferenceToOldestData(saveReferenceToOldestData){
+
+  referenceToOldestData = saveReferenceToOldestData;
+  console.log("Referencia:" , referenceToOldestData);
+
+}
+
+function saveID(id){
+
+  userID = id;
+  console.log("id:" , id);
+
+}
+
+function saveDate(date){
+
+  userDate = date;
+  console.log("date:" , date);
+
+}
 
 
+function getReferenceToOldestData(){
+  return referenceToOldestData;
+}
 
+function getID(){
+  return userID;
+}
+
+function getDate(){
+  return userDate;
+}
 
 
 
