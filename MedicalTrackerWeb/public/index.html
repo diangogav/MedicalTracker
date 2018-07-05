@@ -22,9 +22,10 @@
 
     <!-- Custom styles for this template -->
     <link href="assets/css/dashboard.css" rel="stylesheet">
+    <link href="assets/css/loader.css" rel="stylesheet">
 
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Axios with promises with firebase -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -32,6 +33,7 @@
     <script src="assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- referencia a jQuery y a Highcharts -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -94,34 +96,46 @@
         </div>
 
         <div id="content">
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="info" style="height:700px;overflow-y:scroll;">
-          <h1 class="page-header"></h1>
-          
-          <h2 class="sub-header">Users</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Lastname</th>
-                  <th>Age</th>
-                  <th>Stature</th>
-                  <th>Weight</th>
-                </tr>
-              </thead>
-              <tbody id="users">
-         
-                                                                                                                              
-              </tbody>
-            </table>
-          </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="info" style="height:700px;overflow-y:scroll; padding: 0">
+            <div id="loader-content">
+                  <div id="loader-2">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                  </div>
+            </div>  
+
+            <div style="padding: 40px">
+                <h1 class="page-header"></h1>
+                <h2 class="sub-header">Users</h2>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Lastname</th>
+                        <th>Age</th>
+                        <th>Stature</th>
+                        <th>Weight</th>
+                      </tr>
+                    </thead>
+                    <tbody id="users"> 
+                 
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+
         </div>
       </div>
+
       </div>
 
 
       
     </div>
+    
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -135,9 +149,13 @@
     <!-- My Javascript -->
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 
+
     <script src="assets/js/firebase-actions.js"></script>
     <script src="assets/js/index.js"></script>
+    <script src="assets/js/var.js"></script>
+    <script src="assets/js/viewToHTML.JS"></script>
     <script src="assets/js/chart.js"></script>
+    <script src="assets/js/loader.js"></script>
 
 
   </body>
