@@ -1,0 +1,26 @@
+{
+    "Users" : {
+        "name lastname: userID" : {
+            "age" : 0,
+            "email" : "string",
+            "gender" : "string",
+            "userID" : "string",
+            "lastname" : "string",
+            "name" : "string",
+            "stature" : 0,
+            "weight" : 0
+        }
+    },
+
+    "UsersChart" : {
+        "userID" : {
+            "2018-07-01" : {
+                "12:45:40" : {
+                    "actualHour" : "12:45:40",
+                    "oxygen" : 94,
+                    "pulse" : 75
+                }
+            }
+        }
+    }   
+}
