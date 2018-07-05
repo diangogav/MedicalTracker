@@ -1,587 +1,170 @@
-//************************************************************************************************************************** */
-//***********************************************Variables***************************************************************** */
-//************************************************************************************************************************ */
-var userID;
-var userDate;
-var referenceToOldestKey = '';
-var items = [];
-var referenceToOldestDate = '';
-var referenceToOldestData = '';
-var beforeDate;
-
 
 //*************************************************************************************************************************/ */
 function getData(){
 
+    showLoader("loader-content");
 
-if(referenceToOldestKey == undefined){
+    firebaseInfiniteScroll("Users/",pointer,function(data) {
+      pointer = data.pointer;
 
-}else if (!referenceToOldestKey) { 
-  
-      // if initial fetch
-      firebase.database().ref("Users/")
-     .orderByKey()
-     .limitToLast(10)
-     .once('value')
-     .then((snapshot) => { 
+      data.values.forEach(values => {
 
-        // changing to reverse chronological order (latest first)
-        var arrayOfKeys = Object.keys(snapshot.val())
-           .sort()
-           .reverse();
-           
-        // transforming to array
+        var result = table(values.id,values.name,values.lastname,values.age,values.weight,values.stature,values.gender);
+        innerHTML("users",result);
 
-        var results = arrayOfKeys
-           .map((key) => snapshot.val()[key]);
-
-        // storing reference
-        referenceToOldestKey = arrayOfKeys[arrayOfKeys.length-1];
-
-        //Append to the view html
-        results.forEach(data => {
-
-          var result = table(data.id,data.name,data.lastname,data.age,data.weight,data.stature,data.gender);
-          innerHTML("users",result);
-        });
-        
-    }).catch((error) => {  } );
-
-}else{
-
-  firebase.database().ref("Users/")
-  .orderByKey()
-  .endAt(referenceToOldestKey)
-  .limitToLast(10)
-  .once('value')
-  .then((snapshot) => {
-
-    // changing to reverse chronological order (latest first)
-    // & removing duplicate
-    var arrayOfKeys = Object.keys(snapshot.val())
-        .sort()
-        .reverse()
-        .slice(1);
-
-     // transforming to array
-     var results = arrayOfKeys
-        .map((key) => snapshot.val()[key]);
-
-     // updating reference
-     referenceToOldestKey = arrayOfKeys[arrayOfKeys.length-1];
-     // Do what you want to do with the data, i.e.
-     // append to page or dispatch({ … }) if using redux
-
-     //Append to the view html
-     results.forEach(data => {
-      var result = table(data.id,data.name,data.lastname,data.age,data.weight,data.stature,data.gender);
-      innerHTML("users",result);
+      });
+      hiddenLoader("loader-content");
     });
 
-  
-    
-  }).catch((error) => {  } );
-
-}
 }
 //************************************************************************************************************************* */
 
 function getUser(id,name,lastname,gender,age,weight,stature){
 
-
   var oxygenMeanArray = [];
   var pulseMeanArray = [];
+  var daysMeanArray = [];
+  var values;
 
   cleanDiv("#content");
-
   ajax("#content","details.html");
 
-  var user = firebase.database().ref("UsersChart/"+id ).limitToLast(10);
-  user.once("value",function(snapshot){
-  var key;
-  snapshot.forEach((childSnapshot) => {
+    firebaseGetKeys("UsersChart/" +id ,function(data) {
 
-    key = Object.keys(snapshot.val());    
+      daysMeanArray = data.keys;
 
-  }); 
+      data.keys.forEach(key => {
 
-  key.forEach((data => {
+      firebaseGetValues("UsersChart/"+id +'/'+ key,function(data){
 
-    firebase.database().ref("UsersChart/"+id +'/'+ data).limitToLast(10).once("value",function(snapshot){
-
-      var dataArray = [];
-
-
-      var pulseAcum = 0;
-      var oxygenAcum = 0;
-      var pulseMean = 0;
-      var oxygenMean = 0;
-      var readings = 0;
-
-      snapshot.forEach((childSnapshot) => {
-
-        dataArray.push(childSnapshot.val());
-
-          dataArray.forEach((dat) => {
-            
-            pulseAcum = pulseAcum + dat.pulse;
-            oxygenAcum = oxygenAcum + dat.oxygen;
-
-        });	
-
-        pulseMean = pulseAcum / dataArray.length;
-        oxygenMean = oxygenAcum / dataArray.length;
-        
-        pulseMean = parseFloat(pulseMean.toFixed(2));
-        oxygenMean = parseFloat(oxygenMean.toFixed(2));
-        
-        pulseAcum = 0;
-        oxygenAcum = 0;
-        
-        readings = dataArray.length;
-
-       
-
-
-      });	
-
-      oxygenMeanArray.push(oxygenMean);
-      pulseMeanArray.push(pulseMean);
-      meanChartPulseOxygen(key,oxygenMeanArray,pulseMeanArray);
-
+        values = calculateAverageOxygenPulseDay(data.values);
+        oxygenMeanArray.push(values.oxygenMean);
+        pulseMeanArray.push(values.pulseMean);
+        meanChartPulseOxygen(daysMeanArray,oxygenMeanArray,pulseMeanArray);
+      })
     })
 
+    var actualDay =  daysMeanArray[daysMeanArray.length - 1];
 
+    
+    firebaseActualDataPoints(id,actualDay);
 
-  }))
+    var resultData = userCard(name,lastname);
+    innerHTML("name",resultData);
 
-  var actualDay =  key[key.length - 1];
-  console.log("día actual: ",key[key.length - 1]);
-  console.log("oxigeno",oxygenMeanArray);
-  console.log("pulso",pulseMeanArray);
-  console.log("keys",key);
+    resultData = personalData(gender,age,weight,stature);
+    innerHTML("personalData",resultData);
 
+    hiddenLoader("loader-content");
 
-  var resultData = userCard(name,lastname);
-  innerHTML("name",resultData);
-
-  resultData = personalData(gender,age,weight,stature);
-  innerHTML("personalData",resultData);
-
-  actualDataPoints(id,actualDay);
-});
-
-}
-
-//**************************************************************************************************************************
-
-function actualDataPoints(id,actualDay){
-
-  firebase.database().ref("UsersChart/"+id +'/'+ actualDay).limitToLast(10)
-  .on("value",function(snapshot){ 
-
-    var actualData = [];
-    var actualOxygen = [];
-    var actualPulse = [];
-    var actualHour = [];
-
-    snapshot.forEach((childSnapshot) => {
-
-      actualData.push(childSnapshot.val());
-
-    })
-
-    actualData.forEach((data => {
-
-        actualOxygen.push(data.oxygen);
-        actualPulse.push(data.pulse);
-        actualHour.push(data.actualHour);
-    }))
-    chart(actualHour,actualOxygen,actualPulse,actualDay);
   })
 }
+
+//**************************************************************************************************************************
+function calculateAverageOxygenPulseDay(data){
+
+  var pulseAcum = 0;
+  var oxygenAcum = 0;
+  var pulseMean = 0;
+  var oxygenMean = 0;
+  var readings = 0;
+
+  data.forEach(userData => {
+    pulseAcum = pulseAcum + userData.pulse;
+    oxygenAcum = oxygenAcum + userData.oxygen;
+  })
+
+  pulseMean = pulseAcum / data.length;
+  oxygenMean = oxygenAcum / data.length;
+
+  pulseMean = parseFloat(pulseMean.toFixed(2));
+  oxygenMean = parseFloat(oxygenMean.toFixed(2));
+
+  readings = data.length;
+
+  return {
+    "oxygenMean" : oxygenMean,
+    "pulseMean" : pulseMean
+  }
+
+}
+
 //**************************************************************************************************************************
 
-function historic(id,date){
+function historic(id){
+
+  saveID(id);
 
   cleanDiv("#content");
   ajax("#content","data.html");
 
- 
-  if(referenceToOldestDate == undefined){
+  firebaseInfiniteScroll("UsersChart/"+id,pointerListData,function(data) {
 
-  }else if (!referenceToOldestDate) { 
+    pointerListData = data.pointer;
 
-        // if initial fetch
-        firebase.database().ref("UsersChart/"+id )
-       .orderByKey()
-       .limitToLast(10)
-       .once('value')
-       .then((snapshot) => { 
-  
-          // changing to reverse chronological order (latest first)
-          var arrayOfKeys = Object.keys(snapshot.val())
-             .sort()
-             .reverse();
+    data.keys.forEach(key => {
 
-             arrayOfKeys.forEach(data => {
-              resultData = listDates(id,data);
-              innerHTML("dates",resultData);
-            })
-             
-  
-          // storing reference
-          referenceToOldestDate = arrayOfKeys[arrayOfKeys.length-1];
-  
-          
-      }).catch((error) => {  } );
-  
-  }else{
-  
-    firebase.database().ref("UsersChart/"+id )
-    .orderByKey()
-    .endAt(referenceToOldestDate)
-    .limitToLast(10)
-    .once('value')
-    .then((snapshot) => {
-  
-      // changing to reverse chronological order (latest first)
-      // & removing duplicate
-      var arrayOfKeys = Object.keys(snapshot.val())
-          .sort()
-          .reverse()
-          .slice(1);
-  
-          arrayOfKeys.forEach(data => {
-            resultData = listDates(id,data);
-            innerHTML("dates",resultData);
-          })
-  
-       // updating reference
-       referenceToOldestDate = arrayOfKeys[arrayOfKeys.length-1];
+      var result = listDates(id,key);
+      innerHTML("dates",result);
 
-    }).catch((error) => {  } );
-  
-  }
-
-
+    });
+    hiddenLoader("loader-content");
+  });
 }
 
+//**************************************************************************************************************************
 function getAllDateData(id,date){
 
+
   if(date != beforeDate){
-    referenceToOldestData = '';
+    pointerListDataValues = '';
     cleanDiv("#allData");
   }
-
-  console.log("referencia: ",referenceToOldestData);
-  if(referenceToOldestData == undefined){
-  }else if (!referenceToOldestData) { 
-        // if initial fetch
-        firebase.database().ref("UsersChart/"+id+'/'+ date)
-       .orderByKey()
-       .limitToLast(20)
-       .once('value')
-       .then((snapshot) => { 
-  
-          // changing to reverse chronological order (latest first)
-          var arrayOfKeys = Object.keys(snapshot.val())
-             .sort()
-             .reverse();
+  saveDate(date);
+  saveID(id);
 
 
-             var results = arrayOfKeys
-             .map((key) => snapshot.val()[key]);
-
-             referenceToOldestData = arrayOfKeys[arrayOfKeys.length-1];
-
-             results.forEach(data => {
-              var result = listData(data.actualHour,data.oxygen,data.pulse);
-              innerHTML("allData",result);
-            });  
-
-            saveID(id);
-            saveDate(date);
-            beforeDate = date;
-
-        })
-      }else{
-        firebase.database().ref("UsersChart/"+id+'/'+ date)
-        .orderByKey()
-        .endAt(referenceToOldestData)
-        .limitToLast(10)
-        .once('value')
-        .then((snapshot) => {
-      
-          // changing to reverse chronological order (latest first)
-          // & removing duplicate
-          var arrayOfKeys = Object.keys(snapshot.val())
-              .sort()
-              .reverse()
-              .slice(1);
-      
-           // transforming to array
-           var results = arrayOfKeys
-              .map((key) => snapshot.val()[key]);
-      
-           // updating reference
-           referenceToOldestData = arrayOfKeys[arrayOfKeys.length-1];
-           // Do what you want to do with the data, i.e.
-           // append to page or dispatch({ … }) if using redux
-      
-           //Append to the view html
-           results.forEach(data => {
-            var result = listData(data.actualHour,data.oxygen,data.pulse);
-            innerHTML("allData",result);
-
-            saveID(id);
-            saveDate(date);
-            beforeDate = date;
-
-          });
-      
-        
-          
-        }).catch((error) => {  } );
-      }
-}
-//************************************************************************************************************************** */
-//***********************************************Tools Operations///******************************************************* */
-//************************************************************************************************************************ */
-
-function getID(id){
-return document.getElementById(id).value;
-}
-//************************************************************************************************************************ */
-
-function innerHTML(id,result){
-return document.getElementById(id).innerHTML+=result;
-}
-
-//************************************************************************************************************************ */
-
-function ajax(div,page){
-/*var ajaxRes = new XMLHttpRequest();
-ajaxRes.onreadystatechange = function(){
-  if(ajaxRes.readyState == 4 && ajaxRes.status == 200){
-    document.getElementById(id).innerHTML = ajaxRes.responseText
-  }
-}
-
-ajaxRes.open("GET",page,true);
-ajaxRes.send();*/
-  $(div).load(page);
-}
-
-//************************************************************************************************************************ */
+  firebaseInfiniteScroll("UsersChart/"+id+'/'+ date,pointerListDataValues,function(data) {
 
 
+    console.log(data);
 
-$('#info').bind('scroll', function(){
-  if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
-    console.log("Scroll!!!");
-    getData();
-  }
-});
+    data.values.forEach(value => {
 
+      pointerListDataValues = data.pointer;
+      savePointerListDataValues(pointerListDataValues);
 
 
-//************************************************************************************************************************** */
-//***********************************************View Operations*********************************************************** */
-//************************************************************************************************************************ */
+      var result = listData(value.actualHour,value.oxygen,value.pulse);
+      innerHTML("allData",result);
 
-function table(id,name,lastname,age,weight,stature,gender){
-
-return '<tr>'+
-  '<td>'+name+'</td>'+
-  '<td>'+lastname+'</td>'+
-  '<td>'+age+'</td>'+
-  '<td>'+stature+'</td>'+
-  '<td>'+weight+'</td>'+
-  "<td><a href='#'><i class='fas fa-street-view size-fas'   onclick=\"getUser('"+id+"','"+name+"','"+lastname+"','"+gender+"','"+age+"','"+weight+"','"+stature+"');\"></i></a></td>"+
-  "<td><a href='#'><i class='fas fa-calendar-alt  size-fas'   onclick=\"historic('"+id+"','"+name+"','"+lastname+"','"+gender+"','"+weight+"','"+stature+"');\"></i></a></td>"+
-'</tr>';
-}
-//************************************************************************************************************************ */
-
-function tableUser(actualHour,oxyge,pulse){
-return '<tr>'+
-  '<td>'+actualHour+'</td>'+
-  '<td>'+oxyge+'</td>'+
-  '<td>'+pulse+'</td>'+
-'</tr>';
-}
-
-//************************************************************************************************************************ */
-
-function dateHTML(id,date){
-return '<tr>'+
-"<td><a href='#' onclick=\"details('"+id+"','"+date+"');\"> "+date+"</a></td>"+
-'</tr>';
-}
-
-//************************************************************************************************************************* */
-function userCard(name,lastname){
-  return name + ' ' + lastname;
-}
-//*************************************************************************************************************************
-function personalData(gender,age,weight,stature){
-  return 'Gender: ' + gender + '<br>' + 
-         'Age: ' + age + '<br>' +
-         'Weight: ' + weight + '<br>' +
-         'Stature: ' + stature + '<br>';
-}
-
-function listDates(id,date){
-
-  return "<li><a href='#'onclick=\"getAllDateData('"+id+"','"+date+"');\">"+date+"</a></li>";
-
-}
-
-function listData(actualHour,oxygen,pulse){
-  return '<tr>'+
-  '<td>'+actualHour+'</td>'+
-  '<td>'+oxygen+'</td>'+
-  '<td>'+pulse+'</td>';
-}
-
-function cleanDiv(id){
-$(id).empty();
-}
-
-
-
-function meanChartPulseOxygen(xLabel,yOxygen,yPulse){
-
-
-  Highcharts.chart('barChart', {
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: 'Oxygen and Pulse Data'
-    },
-    subtitle: {
-        text: 'average of the last 10 days'
-    },
-    xAxis: {
-        categories: xLabel,
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Mean (%)'
-        }
-    },
-    tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
-    },
-    plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-        }
-    },
-    series: [{
-      name: 'Oxygen',
-      color: '#098bf8',
-      data: yOxygen
-
-    }, {
-      name: 'Pulse',
-      color: '#ea171b',
-      data: yPulse
-    }]
-});
-}
-
-
-function chart(x,yOxygen,yPulse,actualDay){
-
-  Highcharts.chart('dataChart', {
-    chart: {
-        type: 'line'
-    },
-    title: {
-        text: 'Latest data'
-    },
-    subtitle: {
-        text: actualDay
-    },
-    xAxis: {
-        categories: x
-    },
-    yAxis: {
-        title: {
-            text: 'Temperature (°C)'
-        }
-    },
-    plotOptions: {
-        line: {
-            dataLabels: {
-                enabled: true
-            },
-            enableMouseTracking: false
-        }
-    },
-    series: [{
-        name: 'Oxygen',
-        color: '#098bf8',
-        data: yOxygen
-    }, {
-        name: 'Pulse',
-        color: '#ea171b',
-        data: yPulse
-    }]
+    });  
+    
   });
 
 
-
-
-}
-
-function saveReferenceToOldestData(saveReferenceToOldestData){
-
-  referenceToOldestData = saveReferenceToOldestData;
-  console.log("Referencia:" , referenceToOldestData);
+  beforeDate = date;
 
 }
 
-function saveID(id){
+//**************************************************************************************************************************
+$('#info').bind('scroll', function(){
+  if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
 
-  userID = id;
-  console.log("id:" , id);
+    firebaseInfiniteScroll("Users/",pointer,function(data) {
+      pointer = data.pointer;
+      console.log(data);
 
-}
+      data.values.forEach(values => {
 
-function saveDate(date){
+        var result = table(values.id,values.name,values.lastname,values.age,values.weight,values.stature,values.gender);
+        innerHTML("users",result);
+        
+      });
+    });
+  }
+});
 
-  userDate = date;
-  console.log("date:" , date);
+//**************************************************************************************************************************
 
-}
-
-
-function getReferenceToOldestData(){
-  return referenceToOldestData;
-}
-
-function getID(){
-  return userID;
-}
-
-function getDate(){
-  return userDate;
-}
-
-function usersList(){
-  cleanDiv("#info");
-  getData();
-}
 
